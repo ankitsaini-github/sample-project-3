@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useRef} from 'react';
 
 import Card from '../UI/Card';
 import Button from '../UI/Button';
@@ -6,12 +6,16 @@ import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+  const inputUsername=useRef();
+  const inputUserage=useRef();
+  const inputUserclg=useRef();
   const [error, setError] = useState();
 
   const addUserHandler = (event) => {
     event.preventDefault();
+    const enteredUsername=inputUsername.current.value;
+    const enteredAge=inputUserage.current.value;
+    const enteredclg=inputUserclg.current.value;
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
       setError({
         title: 'Invalid input',
@@ -26,17 +30,10 @@ const AddUser = (props) => {
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('');
-  };
-
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
+    props.onAddUser(enteredUsername, enteredAge,enteredclg);
+      inputUsername.current.value='';
+      inputUserage.current.value='';
+      inputUserclg.current.value='';
   };
 
   const errorHandler = () => {
@@ -58,15 +55,19 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            value={enteredUsername}
-            onChange={usernameChangeHandler}
+            ref={inputUsername}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            ref={inputUserage}
+          />
+          <label htmlFor="userclg">College Name</label>
+          <input
+            id="userclg"
+            type="text"
+            ref={inputUserclg}
           />
           <Button type="submit">Add User</Button>
         </form>
